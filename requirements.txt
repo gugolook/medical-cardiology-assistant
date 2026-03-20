@@ -1,0 +1,14 @@
+# 基础依赖（必须）
+pydicom>=2.3.0
+pillow>=10.0.0
+numpy>=1.24.0
+
+# 视频处理（可选）
+opencv-python>=4.8.0
+scipy>=1.11.0
+
+# AI 分析（可选）
+openai>=1.0.0
+
+# PDF 报告生成（可选）
+reportlab>=4.0.0

@@ -10,10 +10,30 @@ description: |
 
 ## 依赖安装
 
-**基础依赖：**
+### 方式一：快速安装（推荐）
+
+```bash
+# 1. 进入项目目录
+cd medical-cardiology-assistant
+
+# 2. 创建虚拟环境（强烈推荐）
+python -m venv venv
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # macOS/Linux
+
+# 3. 安装所有依赖
+pip install -r requirements.txt
+```
+
+### 方式二：手动安装
+
+**基础依赖（必须）：**
 
     pip install pydicom pillow numpy
-    pip install opencv-python scipy  # 可选
+
+**视频处理依赖（可选）：**
+
+    pip install opencv-python scipy
 
 **AI 分析依赖（可选）：**
 
