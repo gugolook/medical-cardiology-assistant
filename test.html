@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>「三刀合一」真善美定位问卷 | AI评测版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #f3f4f6;
+            font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            padding: 1rem 0.75rem 3rem;
+            color: #1f2937;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 头部 */
+        .hero {
+            background: linear-gradient(135deg, #1e3c2c 0%, #2a5a3a 100%);
+            color: white;
+            border-radius: 1.25rem;
+            padding: 1.5rem 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.25);
+        }
+        .hero h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+        .hero p {
+            font-size: 0.9rem;
+            opacity: 0.88;
+            line-height: 1.6;
+        }
+        .hero .badge {
+            display: inline-block;
+            background: #ffdf7e;
+            color: #2c4b32;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.22rem 0.7rem;
+            border-radius: 40px;
+            margin-top: 0.8rem;
+        }
+
+        /* 卡片样式 */
+        .section {
+            background: white;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f9fafb;
+            padding: 0.85rem 1.1rem;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-header span {
+            background: #2a5a3a;
+            color: white;
+            width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .question {
+            padding: 1rem 1.1rem;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .question:last-child {
+            border-bottom: none;
+        }
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 0.65rem;
+            font-size: 0.95rem;
+            color: #111827;
+            line-height: 1.5;
+        }
+        .q-num {
+            background: #eef2ff;
+            color: #1e3c2c;
+            font-weight: 700;
+            border-radius: 30px;
+            padding: 0.15rem 0.6rem;
+            font-size: 0.68rem;
+            margin-left: 0.4rem;
+        }
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        .radio-label, .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.88rem;
+            background: #f8fafc;
+            padding: 0.65rem 0.9rem;
+            border-radius: 0.7rem;
+            border: 1.5px solid #e2e8f0;
+            cursor: pointer;
+            transition: background 0.1s, border-color 0.1s;
+            -webkit-user-select: none;
+            user-select: none;
+            line-height: 1.45;
+        }
+        .radio-label.selected, .checkbox-label.selected {
+            background: #e6f7ec;
+            border-color: #2a5a3a;
+        }
+        input[type="radio"], input[type="checkbox"] {
+            accent-color: #2a5a3a;
+            width: 1.1rem;
+            height: 1.1rem;
+            flex-shrink: 0;
+        }
+        .text-input, textarea {
+            width: 100%;
+            padding: 0.65rem 0.9rem;
+            border-radius: 0.7rem;
+            border: 1.5px solid #d1d5db;
+            font-size: 0.9rem;
+            font-family: inherit;
+            margin-top: 0.4rem;
+            transition: border-color 0.2s;
+            background: #fafafa;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        textarea {
+            resize: none;
+            min-height: 72px;
+        }
+        .text-input:focus, textarea:focus {
+            outline: none;
+            border-color: #2a5a3a;
+            box-shadow: 0 0 0 3px rgba(42,90,58,0.1);
+        }
+        .word-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.4rem;
+        }
+        .hint {
+            font-size: 0.72rem;
+            color: #6b7280;
+            margin-top: 0.3rem;
+        }
+        .inline-hint {
+            font-size: 0.72rem;
+            color: #6c757d;
+            margin-left: 0.2rem;
+            font-weight: normal;
+        }
+
+        /* 自检清单 */
+        .checklist-item {
+            background: #fefce8;
+            border-left: 4px solid #eab308;
+            padding: 0.75rem 0.9rem;
+            border-radius: 0.6rem;
+            margin-bottom: 0.75rem;
+        }
+        .checklist-radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin-top: 0.5rem;
+        }
+        .checklist-radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.88rem;
+            cursor: pointer;
+            padding: 0.3rem 0;
+        }
+
+        /* 按钮 */
+        .btn-main {
+            background: #2a5a3a;
+            color: white;
+            border: none;
+            font-weight: 700;
+            padding: 0.95rem 1.5rem;
+            border-radius: 3rem;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.02em;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .btn-copy {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border-radius: 3rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 0.75rem;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        /* 结果区 */
+        .result-card {
+            background: #1e293b;
+            color: #f1f5f9;
+            border-radius: 1rem;
+            padding: 1.1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.78rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 380px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            line-height: 1.55;
+        }
+
+        /* 复制成功提示 */
+        .copy-toast {
+            display: none;
+            background: #22c55e;
+            color: white;
+            text-align: center;
+            padding: 0.65rem 1rem;
+            border-radius: 0.7rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .wechat-tip {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 0.7rem;
+            padding: 0.7rem 0.9rem;
+            font-size: 0.8rem;
+            color: #92400e;
+            margin-top: 0.75rem;
+            line-height: 1.6;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.68rem;
+            color: #9ca3af;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🌱 三刀合一 · 定位问卷</h1>
+        <p>真（根）— 善（帮谁）— 美（呈现）<br>回答完自动生成报告，一键复制给 AI 深度评测</p>
+        <div class="badge">✨ 找到你停不下来的事 + 值钱的表达系统</div>
+    </div>
+
+    <form id="questionnaireForm">
+        <!-- 第一部分：真 -->
+        <div class="section">
+            <div class="section-header"><span>1</span> 真 · 你的根在哪里</div>
+            <div class="question">
+                <div class="question-title">第1题 · 上一次做一件事做到忘记时间，是什么事？不是应该做的，是停不下来的。</div>
+                <textarea id="q1" rows="2" placeholder="写下具体的事情，比如：调试AI视频、研究分镜……"></textarea>
+            </div>
+            <div class="question">
+                <div class="question-title">第2题 · 有人批评你做的东西，你的第一反应是什么？</div>
+                <div class="options-group" id="q2Options">
+                    <label class="radio-label"><input type="radio" name="q2_choice" value="A"> A · 很难受，想改，想让他满意</label>
+                    <label class="radio-label"><input type="radio" name="q2_choice" value="B"> B · 想知道他为什么这样说</label>
+                    <label class="radio-label"><input type="radio" name="q2_choice" value="C"> C · 觉得他不懂，我有自己的判断</label>
+                    <label class="radio-label"><input type="radio" name="q2_choice" value="D"> D · 无所谓，继续做</label>
+                </div>
+                <div class="question-title" style="margin-top: 10px;">选哪个，为什么：</div>
+                <textarea id="q2_reason" rows="2" placeholder="例如：我选B，因为我想知道背后的逻辑……"></textarea>
+            </div>
+            <div class="question">
+                <div class="question-title">第3题 · 哪件事做完之后，你会有「对，就是这个」的感觉？</div>
+                <div class="options-group">
+                    <label class="radio-label"><input type="radio" name="q3" value="A"> A · 帮别人想清楚一件事，她说「你说的对」</label>
+                    <label class="radio-label"><input type="radio" name="q3" value="B"> B · 做出一个好看的东西，自己看了满意</label>
+                    <label class="radio-label"><input type="radio" name="q3" value="C"> C · 说了一段话，台下有人点头</label>
+                    <label class="radio-label"><input type="radio" name="q3" value="D"> D · 把一件复杂的事，变成一个简单的流程</label>
+                </div>
+                <div class="hint">只选一个</div>
+            </div>
+            <div class="question">
+                <div class="question-title">第4题 · 如果三个月没有任何结果，你还会继续做吗？靠什么撑着？</div>
+                <textarea id="q4" rows="2" placeholder="写一句话，比如：纯粹热爱探索AI的边界，创造本身就是奖赏。"></textarea>
+            </div>
+        </div>
+
+        <!-- 第二部分：善 -->
+        <div class="section">
+            <div class="section-header"><span>2</span> 善 · 你能帮谁</div>
+            <div class="question">
+                <div class="question-title">第5题 · 朋友遇到问题第一个想到找你，通常是什么问题？</div>
+                <div class="options-group" id="q5Options">
+                    <label class="radio-label"><input type="radio" name="q5_choice" value="A"> A · 想法很多，不知道从哪里开始</label>
+                    <label class="radio-label"><input type="radio" name="q5_choice" value="B"> B · 做了一件事，做得不好看，不知道怎么改</label>
+                    <label class="radio-label"><input type="radio" name="q5_choice" value="C"> C · 心情不好，需要有人听</label>
+                    <label class="radio-label"><input type="radio" name="q5_choice" value="D"> D · 有目标，不知道怎么一步步走到那里</label>
+                </div>
+                <div class="question-title" style="margin-top: 10px;">选哪个，举一个真实例子：</div>
+                <textarea id="q5_example" rows="2" placeholder="例如：选A，朋友想做自媒体但总纠结定位，我帮他拆解了优势。"></textarea>
+            </div>
+            <div class="question">
+                <div class="question-title">第6题 · 你帮过一个人，帮完之后感觉最好的那次，是什么？</div>
+                <textarea id="q6" rows="2" placeholder="写下具体场景，以及你的感受。"></textarea>
+            </div>
+            <div class="question">
+                <div class="question-title">第7题 · 你觉得现在学AI短视频的人，最容易卡在哪里？</div>
+                <div class="options-group" id="q7Options">
+                    <label class="radio-label"><input type="radio" name="q7_choice" value="A"> A · 不知道做什么内容</label>
+                    <label class="radio-label"><input type="radio" name="q7_choice" value="B"> B · 知道做什么，但不敢开口</label>
+                    <label class="radio-label"><input type="radio" name="q7_choice" value="C"> C · 敢做，但不知道怎么让人看到</label>
+                    <label class="radio-label"><input type="radio" name="q7_choice" value="D"> D · 做了有人看，但不知道怎么卖出去</label>
+                </div>
+                <div class="question-title" style="margin-top: 10px;">选哪个，说说你为什么这样觉得：</div>
+                <textarea id="q7_reason" rows="2" placeholder="分析你的洞察"></textarea>
+            </div>
+        </div>
+
+        <!-- 第三部分：美 -->
+        <div class="section">
+            <div class="section-header"><span>3</span> 美 · 你怎么呈现</div>
+            <div class="question">
+                <div class="question-title">第8题 · 给你五分钟，向陌生人介绍「用AI做短视频」，你会选哪种方式？</div>
+                <div class="options-group" id="q8Options">
+                    <label class="radio-label"><input type="radio" name="q8_choice" value="A"> A · 说给他听（口播）</label>
+                    <label class="radio-label"><input type="radio" name="q8_choice" value="B"> B · 写给他看（文字/脚本）</label>
+                    <label class="radio-label"><input type="radio" name="q8_choice" value="C"> C · 做给他看（演示/操作）</label>
+                    <label class="radio-label"><input type="radio" name="q8_choice" value="D"> D · 画给他看（图/流程图）</label>
+                    <label class="radio-label"><input type="radio" name="q8_choice" value="E"> E · 找个例子给他看（案例）</label>
+                </div>
+                <div class="question-title" style="margin-top: 10px;">你为什么选这个，不选别的：</div>
+                <textarea id="q8_reason" rows="2" placeholder="说出你的风格偏好"></textarea>
+            </div>
+            <div class="question">
+                <div class="question-title">第9题 · 你朋友用三个词形容你，他们会说什么？</div>
+                <div class="word-group">
+                    <input type="text" id="q9_word1" class="text-input" placeholder="词一 · 例如「耐心」">
+                    <input type="text" id="q9_word2" class="text-input" placeholder="词二 · 例如「通透」">
+                    <input type="text" id="q9_word3" class="text-input" placeholder="词三 · 例如「好玩」">
+                </div>
+            </div>
+            <div class="question">
+                <div class="question-title">第10题 · 哪个角色让你感觉「就是这个」？<span class="inline-hint">（可选1~2个）</span></div>
+                <div class="options-group" id="q10Options">
+                    <label class="checkbox-label"><input type="checkbox" name="q10_role" value="A"> A · 出镜者：对着镜头说话，让人看你、信你</label>
+                    <label class="checkbox-label"><input type="checkbox" name="q10_role" value="B"> B · 写手：在背后写脚本、写文案，让别人说出来</label>
+                    <label class="checkbox-label"><input type="checkbox" name="q10_role" value="C"> C · 导演：帮别人想内容方向，规划怎么做</label>
+                    <label class="checkbox-label"><input type="checkbox" name="q10_role" value="D"> D · 老师：手把手教别人学会一件事</label>
+                    <label class="checkbox-label"><input type="checkbox" name="q10_role" value="E"> E · 运营：管数据、管发布时间、管账号策略</label>
+                    <label class="checkbox-label"><input type="checkbox" name="q10_role" value="F"> F · 卖货人：选对产品，说对话，让人想买</label>
+                </div>
+                <div class="question-title" style="margin-top: 10px;">为什么是这个，不是别的？</div>
+                <textarea id="q10_reason" rows="2" placeholder="写出你的角色直觉"></textarea>
+            </div>
+        </div>
+
+        <!-- 第四部分：自检 -->
+        <div class="section">
+            <div class="section-header"><span>4</span> 摇钱树自检清单</div>
+            <div class="question">
+                <div class="checklist-item">
+                    <div class="question-title">① 它有"根"吗？—— 内容能自动生长吗？<br><span class="inline-hint">（看第1、3、4题，是否来自停不下来的事&帮人变简单的爽感）</span></div>
+                    <div class="checklist-radio-group">
+                        <label><input type="radio" name="root_check" value="是"> 是，我有稳定的内容源头。</label>
+                        <label><input type="radio" name="root_check" value="否"> 否，我还在随机找灵感。</label>
+                    </div>
+                </div>
+                <div class="checklist-item">
+                    <div class="question-title">② 它在"长高"吗？—— 每次努力都在积累同一种信任吗？<br><span class="inline-hint">（看第2、5、6、7题）</span></div>
+                    <div class="checklist-radio-group">
+                        <label><input type="radio" name="grow_check" value="是"> 是，我在积累同一种信任。</label>
+                        <label><input type="radio" name="grow_check" value="否"> 否，我每次都在从零开始。</label>
+                    </div>
+                </div>
+                <div class="checklist-item">
+                    <div class="question-title">③ 它能"结果"吗？—— 有可复制的方法或风格吗？<br><span class="inline-hint">（看第8、9、10题）</span></div>
+                    <div class="checklist-radio-group">
+                        <label><input type="radio" name="result_check" value="是"> 是，我有可复制的"方法论"或"风格"。</label>
+                        <label><input type="radio" name="result_check" value="否"> 否，内容高度依赖我本人。</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn-main" id="generateBtn">✨ 一键生成完整内容 &amp; AI评测包</button>
+
+        <div id="resultContainer" style="display: none;">
+            <div class="result-card" id="resultText"></div>
+            <button type="button" class="btn-copy" id="copyBtn">📋 复制完整报告</button>
+            <div class="copy-toast" id="copyToast">✅ 已复制！去 ChatGPT / DeepSeek 粘贴评测</div>
+            <div class="wechat-tip" id="wechatTip">
+                📌 <strong>微信内复制说明：</strong><br>
+                长按上方黑色报告区域 → 选择"全选" → "复制"，再去AI工具粘贴即可。
+            </div>
+            <p class="hint" style="margin-top: 0.6rem; text-align:center; font-size: 0.75rem;">
+                👆 复制后粘贴到 ChatGPT / Claude / DeepSeek<br>提问：「请根据我的三刀合一问卷给出深度评测和下一步行动建议」
+            </p>
+        </div>
+        <footer>基于「真·善·美」模型 | 填完即生成你的定位蓝本</footer>
+    </form>
+</div>
+
+<script>
+(function() {
+    // 检测是否微信内置浏览器
+    var isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+
+    function getRadioValue(name) {
+        var radio = document.querySelector('input[name="' + name + '"]:checked');
+        return radio ? radio.value : null;
+    }
+
+    function getCheckedRoles() {
+        var checkboxes = document.querySelectorAll('input[name="q10_role"]:checked');
+        return Array.prototype.map.call(checkboxes, function(cb) { return cb.value; });
+    }
+
+    function generateFullReport() {
+        var q1 = document.getElementById('q1').value.trim() || '（未填写）';
+        var q2_choice = getRadioValue('q2_choice');
+        var q2_reason = document.getElementById('q2_reason').value.trim() || '未说明原因';
+        var q2_display = q2_choice || '未选';
+        var q3 = getRadioValue('q3');
+        var q3_map = { A: 'A·帮别人想清楚一件事', B: 'B·做出好看的东西', C: 'C·说了台下有人点头', D: 'D·把复杂变成简单流程' };
+        var q3_text = q3 ? q3_map[q3] : '未选择';
+        var q4 = document.getElementById('q4').value.trim() || '（未填写）';
+
+        var q5_choice = getRadioValue('q5_choice');
+        var q5_example = document.getElementById('q5_example').value.trim() || '未举例';
+        var q5_map = { A: 'A·想法很多不知从哪开始', B: 'B·做了不好看不知怎么改', C: 'C·心情不好需要有人听', D: 'D·有目标不知怎么走' };
+        var q5_text = q5_choice ? q5_map[q5_choice] : '未选';
+        var q6 = document.getElementById('q6').value.trim() || '（未填写）';
+        var q7_choice = getRadioValue('q7_choice');
+        var q7_reason = document.getElementById('q7_reason').value.trim() || '未说明';
+        var q7_map = { A: 'A·不知做什么内容', B: 'B·不敢开口', C: 'C·不知怎么让人看到', D: 'D·不知怎么卖出去' };
+        var q7_text = q7_choice ? q7_map[q7_choice] : '未选';
+
+        var q8_choice = getRadioValue('q8_choice');
+        var q8_reason = document.getElementById('q8_reason').value.trim() || '未说明';
+        var q8_map = { A: 'A·口播', B: 'B·文字/脚本', C: 'C·演示/操作', D: 'D·图/流程图', E: 'E·案例' };
+        var q8_text = q8_choice ? q8_map[q8_choice] : '未选';
+        var q9_word1 = document.getElementById('q9_word1').value.trim() || '?';
+        var q9_word2 = document.getElementById('q9_word2').value.trim() || '?';
+        var q9_word3 = document.getElementById('q9_word3').value.trim() || '?';
+        var roles = getCheckedRoles();
+        var roleMap = { A:'出镜者', B:'写手', C:'导演', D:'老师', E:'运营', F:'卖货人' };
+        var roleStr = roles.length ? roles.map(function(r){ return r+'·'+roleMap[r]; }).join('、') : '未选择';
+        var q10_reason = document.getElementById('q10_reason').value.trim() || '未说明';
+
+        var rootVal = getRadioValue('root_check');
+        var growVal = getRadioValue('grow_check');
+        var resultVal = getRadioValue('result_check');
+        var rootText = rootVal === '是' ? '✅ 是，有稳定内容源头' : (rootVal === '否' ? '❌ 否，还在随机找灵感' : '未作答');
+        var growText = growVal === '是' ? '✅ 是，在积累同一种信任' : (growVal === '否' ? '❌ 否，每次从零开始' : '未作答');
+        var resultTextCheck = resultVal === '是' ? '✅ 是，有可复制方法论或风格' : (resultVal === '否' ? '❌ 否，高度依赖本人' : '未作答');
+
+        var report = '# 🌳 三刀合一·个人定位完整问卷报告\n'
+            + '> 请根据"真-善-美"框架分析我的优势、用户匹配度及变现路径。\n\n'
+            + '## 第一部分：真·根（内在驱动力）\n'
+            + 'Q1 忘记时间的事：' + q1 + '\n'
+            + 'Q2 面对批评的反应：选 ' + q2_display + ' / 原因：' + q2_reason + '\n'
+            + 'Q3 "对就是这个"的感觉：' + q3_text + '\n'
+            + 'Q4 无结果时靠什么撑着：' + q4 + '\n\n'
+            + '## 第二部分：善·帮谁（用户痛点）\n'
+            + 'Q5 朋友找我解决的问题：' + q5_text + ' / 例子：' + q5_example + '\n'
+            + 'Q6 帮人后感觉最好的那次：' + q6 + '\n'
+            + 'Q7 AI短视频核心卡点：' + q7_text + ' / 为什么：' + q7_reason + '\n\n'
+            + '## 第三部分：美·呈现（表达魅力）\n'
+            + 'Q8 介绍首选方式：' + q8_text + ' / 理由：' + q8_reason + '\n'
+            + 'Q9 朋友形容我的三个词：' + q9_word1 + ' · ' + q9_word2 + ' · ' + q9_word3 + '\n'
+            + 'Q10 本能心动的角色：' + roleStr + ' / 为什么：' + q10_reason + '\n\n'
+            + '## 第四部分：摇钱树自检\n'
+            + '① 有根吗？' + rootText + '\n'
+            + '② 长高吗（信任复利）？' + growText + '\n'
+            + '③ 能结果吗（可复制系统）？' + resultTextCheck + '\n\n'
+            + '## 📌 AI评测指令\n'
+            + '请扮演AI商业定位教练，基于以上答案：\n'
+            + '1. 分析我的"真"是否足够锋利\n'
+            + '2. 判断我最擅长帮助的用户画像\n'
+            + '3. 推荐最适合我的内容角色与呈现方式\n'
+            + '4. 给出下一步最小可执行动作（1-3个具体建议）\n'
+            + '5. 评估三刀合一分数（每项0-10分）及突破方向\n';
+        return report;
+    }
+
+    var resultContainer = document.getElementById('resultContainer');
+    var resultTextDiv = document.getElementById('resultText');
+    var generateBtn = document.getElementById('generateBtn');
+    var copyBtn = document.getElementById('copyBtn');
+    var copyToast = document.getElementById('copyToast');
+    var wechatTip = document.getElementById('wechatTip');
+
+    generateBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var fullReport = generateFullReport();
+        resultTextDiv.innerText = fullReport;
+        resultContainer.style.display = 'block';
+        // 微信内显示操作提示
+        if (isWeChat) {
+            wechatTip.style.display = 'block';
+        }
+        setTimeout(function() {
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    });
+
+    copyBtn.addEventListener('click', function() {
+        var textToCopy = resultTextDiv.innerText;
+
+        // 优先使用 clipboard API
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                showCopySuccess();
+            }).catch(function() {
+                fallbackCopy(textToCopy);
+            });
+        } else {
+            fallbackCopy(textToCopy);
+        }
+    });
+
+    function fallbackCopy(text) {
+        // 微信/旧浏览器降级方案
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0;';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        // iOS 需要 setSelectionRange
+        if (textarea.setSelectionRange) {
+            textarea.setSelectionRange(0, textarea.value.length);
+        }
+        var success = false;
+        try {
+            success = document.execCommand('copy');
+        } catch(e) {}
+        document.body.removeChild(textarea);
+        if (success) {
+            showCopySuccess();
+        } else {
+            // 微信内真的复制不了就提示手动操作
+            wechatTip.style.display = 'block';
+            wechatTip.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+
+    function showCopySuccess() {
+        copyToast.style.display = 'block';
+        setTimeout(function() {
+            copyToast.style.display = 'none';
+        }, 3000);
+    }
+
+    // radio/checkbox 视觉高亮
+    var allLabels = document.querySelectorAll('.radio-label, .checkbox-label');
+    for (var i = 0; i < allLabels.length; i++) {
+        (function(label) {
+            var input = label.querySelector('input');
+            if (!input) return;
+            input.addEventListener('change', function() {
+                if (input.type === 'radio') {
+                    var sameGroup = document.querySelectorAll('.radio-label input[name="' + input.name + '"]');
+                    for (var j = 0; j < sameGroup.length; j++) {
+                        var pl = sameGroup[j].closest('.radio-label');
+                        if (pl) pl.classList.remove('selected');
+                    }
+                    if (input.checked) label.classList.add('selected');
+                } else {
+                    if (input.checked) label.classList.add('selected');
+                    else label.classList.remove('selected');
+                }
+            });
+            if (input.checked) label.classList.add('selected');
+        })(allLabels[i]);
+    }
+})();
+</script>
+</body>
+</html>
